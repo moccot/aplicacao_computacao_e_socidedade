@@ -1,0 +1,6 @@
+{
+    "description": "",
+    "scripts": {
+        "gen_doc": "typedoc main.ts --out doc/"
+    }
+}
