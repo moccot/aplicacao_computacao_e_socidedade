@@ -1,6 +1,6 @@
 {
     "description": "",
     "scripts": {
-        "gen_doc": "typedoc main.ts --out doc/"
+        "gen_doc": "typedoc main.ts --out doc/ && typedoc main.ts --plugin typedoc-plugin-markdown --out ./doc/markdown"
     }
 }
