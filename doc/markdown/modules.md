@@ -9,13 +9,19 @@
 - [InstructionObservable](undefined)
 - [InstructionObserver](undefined)
 - [Interface](undefined)
+- [NoSubscribersError](undefined)
 - [Observable](undefined)
 - [Observer](undefined)
+- [UnacceptedEventTypesError](undefined)
 
 ### Interfaces
 
-- [InstructionDataIF](undefined)
 - [ObserverDataIF](undefined)
+
+### Type Aliases
+
+- [InstructionCallback](undefined)
+- [InstructionEventType](undefined)
 
 ## Classes
 
@@ -23,11 +29,11 @@
 
 • **InstructionObservable**: Class InstructionObservable
 
-Classe que representa um observable.
+Classe que representa um Observable de instruções.
 
 #### Defined in
 
-[main.ts:149](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/8fc5741/main.ts#L149)
+[main.ts:202](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L202)
 
 ___
 
@@ -35,11 +41,11 @@ ___
 
 • **InstructionObserver**: Class InstructionObserver
 
-Classe que representa um Observer.
+Classe que representa um Observer de instruções.
 
 #### Defined in
 
-[main.ts:148](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/8fc5741/main.ts#L148)
+[main.ts:197](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L197)
 
 ___
 
@@ -47,9 +53,21 @@ ___
 
 • **Interface**: Class Interface
 
+Classe que representa o controlador de interface.
+
 #### Defined in
 
-[main.ts:155](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/8fc5741/main.ts#L155)
+[main.ts:211](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L211)
+
+___
+
+### NoSubscribersError
+
+• **NoSubscribersError**: Class NoSubscribersError
+
+#### Defined in
+
+[main.ts:7](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L7)
 
 ___
 
@@ -68,7 +86,7 @@ Classe que representa um observable.
 
 #### Defined in
 
-[main.ts:61](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/8fc5741/main.ts#L61)
+[main.ts:91](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L91)
 
 ___
 
@@ -86,21 +104,19 @@ Classe que representa um Observer.
 
 #### Defined in
 
-[main.ts:18](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/8fc5741/main.ts#L18)
+[main.ts:30](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L30)
 
-## Interfaces
+___
 
-### InstructionDataIF
+### UnacceptedEventTypesError
 
-• **InstructionDataIF**: Interface InstructionDataIF
-
-Interface para dados de um Observer.
+• **UnacceptedEventTypesError**: Class UnacceptedEventTypesError
 
 #### Defined in
 
-[main.ts:144](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/8fc5741/main.ts#L144)
+[main.ts:1](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L1)
 
-___
+## Interfaces
 
 ### ObserverDataIF
 
@@ -110,4 +126,42 @@ Interface para dados de um Observer.
 
 #### Defined in
 
-[main.ts:4](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/8fc5741/main.ts#L4)
+[main.ts:16](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L16)
+
+## Type Aliases
+
+### InstructionCallback
+
+Ƭ **InstructionCallback**: Function
+
+#### Type declaration
+
+▸ (`data`): Object
+
+Tipo de callback de instrução.
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | ObserverDataIF |
+
+##### Returns
+
+Object
+
+#### Defined in
+
+[main.ts:192](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L192)
+
+___
+
+### InstructionEventType
+
+Ƭ **InstructionEventType**: "slide\_left" \| "slide\_right" \| "slide\_up" \| "slide\_down" \| "single\_touch"
+
+Tipo de event de instrução.
+
+#### Defined in
+
+[main.ts:187](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L187)

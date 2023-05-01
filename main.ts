@@ -34,7 +34,7 @@ class Observer<DataT extends ObserverDataIF> {
     private readonly acceptedEventType: string;
 
     /**
-     * Callback com a lógica de processamento de dados recebidos por meio do evento aceito pelo Observer.
+     * Callback com a lógica de processamento de dados passados pelo Observable em qual o Observer está inscrito.
      * @param data - O dado recebido por meio do evento aceito pelo Observer.
      */
     private customUpdate?: (data: DataT) => {} | null;
@@ -56,7 +56,7 @@ class Observer<DataT extends ObserverDataIF> {
     }
 
     /**
-     * Deleta a propriedade customUpdate.
+     * Anula a propriedade customUpdate.
      */
     unsetCustomUpdate() {
         delete this.customUpdate;
@@ -64,14 +64,22 @@ class Observer<DataT extends ObserverDataIF> {
 
     /**
      * Lógica interna de atualização do Observer.
-     * @param data - O dado recebido por meio do evento aceito pelo Observer.
+     * @param data - O dado passado pelo Observable em qual o Observer está inscrito.
      */
     _update(data: DataT) {
+        /**
+         * Se o tipo do evento que gerou o dado não for aceito pelo Observer, atira um erro.
+         */
         if (data.eventType !== this.acceptedEventType) throw new Error(`Unnaccepted event type (${data.eventType}) for Observer. Accepted event type (${this.acceptedEventType})`);
 
+        /**
+         * Se a propriedade customUpdate for um falsy, avise que ela pode não ter sido definida ou foi anulada.
+         */
         if (!this.customUpdate)
             console.warn("Property customUpdate was not defined for Observer or was unset.");
-
+        /**
+         * Se não, chame customUpdate passando o dado.
+         */
         else
             this.customUpdate(data);
     }
@@ -103,13 +111,19 @@ class Observable<DataT extends ObserverDataIF, ObserverT extends Observer<DataT>
     }
 
     /**
-     * Increve um observer.
+     * Inscreve um observer.
      * @param eventType O tipo do evento em que o Observer será inscrito.
      * @param observer O observer que será inscrito.
      */
     subscribe(eventType: string, observer: ObserverT) {
+        /**
+         * Se o tipo de evento no qual o Observer será inscrito não é existe na lista de tipos de evento aceitos pelo Observable, atira um erro.
+         */
         if (!this.acceptedEventTypes.includes(eventType)) throw new UnacceptedEventTypesError(eventType, this.acceptedEventTypes);
 
+        /**
+         * Se sim, inscreve o Observer naquele tipo de evento.
+         */
         this.subscribers[eventType]!.push(observer);
     }
 
@@ -119,16 +133,27 @@ class Observable<DataT extends ObserverDataIF, ObserverT extends Observer<DataT>
      * @param observer O observer que será desinscrito.
      */
     unsubscribe(eventType: string, observer: ObserverT) {
+        /**
+         * Se o tipo de evento do qual o Observer será desinscrito não é existe na lista de tipos de evento aceitos pelo Observable, atira um erro.
+         */
         if (!this.acceptedEventTypes.includes(eventType)) throw new UnacceptedEventTypesError(eventType, this.acceptedEventTypes);
 
+        /**
+         * Se sim, testa se a lista de Observer's inscritos nesse tipo de evento está vazia, se sim, atira um erro.
+         */
         if (this.subscribers[eventType]!.length === 0) throw new NoSubscribersError(eventType);
 
+        /**
+         * Se não, procura pelo Observer nessa lista e o remove, se ele não for encontrado, atira um erro.
+         */
         for (let subscriber of this.subscribers[eventType]!) {
             if (subscriber === observer) {
                 let observerIndex = this.subscribers[eventType]!.indexOf(subscriber);
                 delete this.subscribers[eventType]![observerIndex];
             }
         }
+
+        throw new Error("Could not remove Observer: Observer not found.");
     }
 
     /**
@@ -137,10 +162,19 @@ class Observable<DataT extends ObserverDataIF, ObserverT extends Observer<DataT>
      * @param data O dado a ser entregue por meio do evento.
      */
     notifyAllSubscribers(eventType: string, data: any) {
+        /**
+         * Se o tipo de evento no qual o dado será propagado não existir na lista de tipos de evento aceitos pelo Observable, atira um erro.
+         */
         if (!this.acceptedEventTypes.includes(eventType)) throw new UnacceptedEventTypesError(eventType, this.acceptedEventTypes);
 
+        /**
+         * Se sim, testa se a lista de Observer's inscritos nesse tipo de evento está vazia, se sim, atira um erro.
+         */
         if (this.subscribers[eventType]!.length === 0) throw new NoSubscribersError(eventType);
 
+        /**
+         * Se não, varre a lista de Observer's incritos naquele tipo de evento, passando o dado para todos eles.
+         */
         for (let subscriber of this.subscribers[eventType]!) {
             subscriber._update({ eventType, data } as DataT);
         }
@@ -216,12 +250,19 @@ class Interface {
      */
     constructor(vector: HTMLElement) {
         this._vector = vector;
+        
+        /**
+         * Inscreve todos os Observer's de Instrução criados no Observable de Instrução.
+         */
         this._instructionObservable.subscribe("slide_left", this._instructionObservers.slide_left);
         this._instructionObservable.subscribe("slide_right", this._instructionObservers.slide_right);
         this._instructionObservable.subscribe("slide_up", this._instructionObservers.slide_up);
         this._instructionObservable.subscribe("slide_down", this._instructionObservers.slide_down);
         this._instructionObservable.subscribe("single_touch", this._instructionObservers.single_touch);
 
+        /**
+         * Adiciona os ouvintes de evento ao elemento vetor, para capturar toques e deslizes sobre ele.
+         */
         this._vector.addEventListener("touchstart", event => {
             this._touchState.touch_start.x = event.touches[0].clientX;
             this._touchState.touch_start.y = event.touches[0].clientY;
