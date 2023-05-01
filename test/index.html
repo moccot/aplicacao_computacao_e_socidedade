@@ -22,25 +22,33 @@
 
             let interface = new Interface(mainDiv);
 
-            interface.on("slideLeft", () => {
-                console.log("slideLeft");
+            interface.on("slide_left", touchState => {
+                console.log("slide_left");
+                console.log("Touch state: ", touchState);
             });
 
-            interface.on("slideRight", () => {
-                console.log("slideRight");
+            interface.on("slide_right", touchState => {
+                console.log("slide_right");
+                console.log("Touch state: ", touchState);
             });
 
-            interface.on("slideUp", () => {
-                console.log("slideUp");
+            interface.on("slide_up", touchState => {
+                console.log("slide_up");
+                console.log("Touch state: ", touchState);
             });
 
-            interface.on("slideDown", () => {
-                console.log("slideDown");
+            interface.on("slide_down", touchState => {
+                console.log("slide_down");
+                console.log("Touch state: ", touchState);
             });
 
-            interface.on("singleTouch", () => {
-                console.log("singleTouch");
+            interface.on("single_touch", touchState => {
+                console.log("single_touch");
+                console.log("Touch state: ", touchState);
             });
+
+            interface.removeEventListener("slide_left");
+            console.log("Touch state: ", touchState);
         }
     </script>
 </head>

@@ -1,3 +1,15 @@
+class UnacceptedEventTypesError extends Error {
+    constructor(unacceptedEventType: string, acceptedEventTypes: string[]) {
+        super(`Unnaccepted event type (${unacceptedEventType}) for Observable. Accepted event types (${acceptedEventTypes})`);
+    }
+}
+
+class NoSubscribersError extends Error {
+    constructor(eventType: string) {
+        super(`There are no subscribers for such event type (${eventType}).`);
+    }
+}
+
 /**
  * Interface para dados de um Observer.
  */
@@ -25,13 +37,13 @@ class Observer<DataT extends ObserverDataIF> {
      * Callback com a lógica de processamento de dados recebidos por meio do evento aceito pelo Observer.
      * @param data - O dado recebido por meio do evento aceito pelo Observer.
      */
-    private customUpdate?: (data: DataT) => {};
+    private customUpdate?: (data: DataT) => {} | null;
 
     /**
      * @param acceptedEventType - O tipo de evento aceito pelo Observer.
      * @param customUpdate - Callback com a lógica de processamento de dados recebidos por meio do evento aceito pelo Observer.
      */
-    constructor (acceptedEventType: string, customUpdate?: (data: DataT) => {}) {
+    constructor(acceptedEventType: string, customUpdate?: (data: DataT) => {} | null) {
         this.acceptedEventType = acceptedEventType;
         this.customUpdate = customUpdate;
     }
@@ -44,21 +56,24 @@ class Observer<DataT extends ObserverDataIF> {
     }
 
     /**
+     * Deleta a propriedade customUpdate.
+     */
+    unsetCustomUpdate() {
+        delete this.customUpdate;
+    }
+
+    /**
      * Lógica interna de atualização do Observer.
      * @param data - O dado recebido por meio do evento aceito pelo Observer.
      */
     _update(data: DataT) {
-        if (data.eventType === this.acceptedEventType) {
-            if (this.customUpdate)
-                this.customUpdate(data);
+        if (data.eventType !== this.acceptedEventType) throw new Error(`Unnaccepted event type (${data.eventType}) for Observer. Accepted event type (${this.acceptedEventType})`);
 
-            else
-                throw new Error("Property customUpdate was not defined.");
-        }
+        if (!this.customUpdate)
+            console.warn("Property customUpdate was not defined for Observer or was unset.");
 
-        else {
-            throw new Error(`Unnaccepted eventType (${data.eventType}) for Observer. Accepted eventType (${this.acceptedEventType})`);
-        }
+        else
+            this.customUpdate(data);
     }
 }
 
@@ -74,13 +89,17 @@ class Observable<DataT extends ObserverDataIF, ObserverT extends Observer<DataT>
     /**
      * Uma lista com todos os Observer's inscritos ao Observable separados por tipo de evento.
      */
-    private readonly subscribers: {[index: string]: ObserverT[] | undefined} = {};
+    private readonly subscribers: { [index: string]: ObserverT[] | undefined } = {};
 
     /**
      * @param acceptedEventTypes Uma lista com todos os Observer's inscritos ao Observable separados por tipo de evento.
      */
-    constructor (acceptedEventTypes: string[]) {
+    constructor(acceptedEventTypes: string[]) {
         this.acceptedEventTypes = acceptedEventTypes;
+
+        for (let acceptedEventType of this.acceptedEventTypes) {
+            this.subscribers[acceptedEventType] = [];
+        }
     }
 
     /**
@@ -88,18 +107,10 @@ class Observable<DataT extends ObserverDataIF, ObserverT extends Observer<DataT>
      * @param eventType O tipo do evento em que o Observer será inscrito.
      * @param observer O observer que será inscrito.
      */
-    subscribe (eventType: string, observer: ObserverT) {
-        if (this.acceptedEventTypes.includes(eventType)) {
-            if (!this.subscribers[eventType]) {
-                this.subscribers[eventType] = [];
-            }
+    subscribe(eventType: string, observer: ObserverT) {
+        if (!this.acceptedEventTypes.includes(eventType)) throw new UnacceptedEventTypesError(eventType, this.acceptedEventTypes);
 
-            this.subscribers[eventType]?.push(observer);
-        }
-
-        else {
-            throw new Error(`Unnaccepted eventType (${eventType}) for Observable. Accepted eventTypes (${this.acceptedEventTypes})`);
-        }
+        this.subscribers[eventType]!.push(observer);
     }
 
     /**
@@ -107,22 +118,16 @@ class Observable<DataT extends ObserverDataIF, ObserverT extends Observer<DataT>
      * @param eventType O tipo do evento do qual o Observer será desinscrito.
      * @param observer O observer que será desinscrito.
      */
-    unsubscribe (eventType: string, observer: ObserverT) {
-        if (this.acceptedEventTypes.includes(eventType)) {
-            if (!this.subscribers[eventType] || this.subscribers[eventType]?.length === 0) {
-                throw new Error(`There are no subscribers for such event type (${eventType}).`)
-            }
+    unsubscribe(eventType: string, observer: ObserverT) {
+        if (!this.acceptedEventTypes.includes(eventType)) throw new UnacceptedEventTypesError(eventType, this.acceptedEventTypes);
 
-            for (let subscriber of this.subscribers[eventType]!) {
-                if (subscriber === observer) {
-                    let observerIndex = this.subscribers[eventType]!.indexOf(subscriber);
-                    delete this.subscribers[eventType]![observerIndex];
-                }
-            }
-        }
+        if (this.subscribers[eventType]!.length === 0) throw new NoSubscribersError(eventType);
 
-        else {
-            throw new Error(`Unnaccepted eventType (${eventType}) for Observable. Accepted eventTypes (${this.acceptedEventTypes})`);
+        for (let subscriber of this.subscribers[eventType]!) {
+            if (subscriber === observer) {
+                let observerIndex = this.subscribers[eventType]!.indexOf(subscriber);
+                delete this.subscribers[eventType]![observerIndex];
+            }
         }
     }
 
@@ -132,107 +137,148 @@ class Observable<DataT extends ObserverDataIF, ObserverT extends Observer<DataT>
      * @param data O dado a ser entregue por meio do evento.
      */
     notifyAllSubscribers(eventType: string, data: any) {
-        if (this.acceptedEventTypes.includes(eventType)) {
-            if (!this.subscribers[eventType] || this.subscribers[eventType]?.length === 0) {
-                throw new Error(`There are no subscribers for such event type (${eventType}).`)
-            }
+        if (!this.acceptedEventTypes.includes(eventType)) throw new UnacceptedEventTypesError(eventType, this.acceptedEventTypes);
 
-            for (let subscriber of this.subscribers[eventType]!) {
-                subscriber._update({eventType, data} as DataT);
-            }
-        }
+        if (this.subscribers[eventType]!.length === 0) throw new NoSubscribersError(eventType);
 
-        else {
-            throw new Error(`Unnaccepted eventType (${eventType}) for Observable. Accepted eventTypes (${this.acceptedEventTypes})`);
+        for (let subscriber of this.subscribers[eventType]!) {
+            subscriber._update({ eventType, data } as DataT);
         }
     }
 }
 
-interface InstructionDataIF extends ObserverDataIF {
-    eventType: "slide_left" | "slide_right" | "slide_up" | "slide_down" | "single_touch" | "double touch";
-    data: any;
-}
+/**
+ * Tipo de event de instrução.
+ */
+type InstructionEventType = "slide_left" | "slide_right" | "slide_up" | "slide_down" | "single_touch";
 
-class InstructionObserver extends Observer<InstructionDataIF> {}
-class InstructionObservable extends Observable<InstructionDataIF, InstructionObserver> {
-    constructor () {
-        super(["slide_left", "slide_right", "slide_up", "slide_down", "single_touch", "double_touch"]);
+/**
+ * Tipo de callback de instrução.
+ */
+type InstructionCallback = (data: ObserverDataIF) => {};
+
+/**
+ * Classe que representa um Observer de instruções.
+ */
+class InstructionObserver extends Observer<ObserverDataIF> { }
+
+/**
+ * Classe que representa um Observable de instruções.
+ */
+class InstructionObservable extends Observable<ObserverDataIF, InstructionObserver> {
+    constructor() {
+        super(["slide_left", "slide_right", "slide_up", "slide_down", "single_touch"]);
     }
 }
 
+/**
+ * Classe que representa o controlador de interface.
+ */
 class Interface {
-    private _touchState: {
-        touchstart: {
-            x: number | null,
-            y: number | null
+    /**
+     * Elemento html que pelo qual o observable as instruções serão recebidas.
+     */
+
+    private readonly _vector: HTMLElement;
+    /**
+     * Armazena os estados do toque e deslize sobre o elemento vector.
+     */
+    private _touchState = {
+        touch_start: {
+            x: 0,
+            y: 0
         },
-        touchlastpos: {
-            x: number | null,
-            y: number | null
+        touch_last_pos: {
+            x: 0,
+            y: 0
         },
-        touchmoved: boolean | null
+        touch_moved: false
     };
 
-    private _internalIntructionObservable: InstructionObservable;
-    private _slideLeftInstructionObserver: InstructionObserver;
-    private _slideRightInstructionObserver: InstructionObserver;
-    private _slideUpInstructionObserver: InstructionObserver;
-    private _slideDownInstructionObserver: InstructionObserver;
-    private _singleTouchInstructionObserver: InstructionObserver;
-    private _doubleTouchInstructionObserver: InstructionObserver;
+    /**
+     * O Observable que emite repassa as instruções recebidas pelo elemento vector.
+     */
+    private _instructionObservable = new InstructionObservable();
 
-    constructor (vector: HTMLElement) {
-        this._touchState = {touchstart: {x: null,y: null}, touchlastpos: {x: null,y: null}, touchmoved: null};
-        this._internalIntructionObservable = new InstructionObservable();
-        this._slideLeftInstructionObserver = new InstructionObserver("slide_left");
-        this._slideRightInstructionObserver = new InstructionObserver("slide_right");
-        this._slideUpInstructionObserver = new InstructionObserver("slide_up");
-        this._slideDownInstructionObserver = new InstructionObserver("slide_down");
-        this._singleTouchInstructionObserver = new InstructionObserver("single_touch");
-        this._doubleTouchInstructionObserver = new InstructionObserver("double_touch");
+    /**
+     * Uma lista de observers separados por tipo evento.
+     */
+    private _instructionObservers = {
+        "slide_left": new InstructionObserver("slide_left"),
+        "slide_right": new InstructionObserver("slide_right"),
+        "slide_up": new InstructionObserver("slide_up"),
+        "slide_down": new InstructionObserver("slide_down"),
+        "single_touch": new InstructionObserver("single_touch"),
+    };
 
-        this._internalIntructionObservable.subscribe("slide_left", this._slideLeftInstructionObserver);
-        this._internalIntructionObservable.subscribe("slide_right", this._slideRightInstructionObserver);
-        this._internalIntructionObservable.subscribe("slide_up", this._slideUpInstructionObserver);
-        this._internalIntructionObservable.subscribe("slide_down", this._slideDownInstructionObserver);
-        this._internalIntructionObservable.subscribe("single_touch", this._singleTouchInstructionObserver);
-        this._internalIntructionObservable.subscribe("double_touch", this._doubleTouchInstructionObserver);
+    /**
+     * @param vector O elemento pelo qual as instruções são recebidas.
+     */
+    constructor(vector: HTMLElement) {
+        this._vector = vector;
+        this._instructionObservable.subscribe("slide_left", this._instructionObservers.slide_left);
+        this._instructionObservable.subscribe("slide_right", this._instructionObservers.slide_right);
+        this._instructionObservable.subscribe("slide_up", this._instructionObservers.slide_up);
+        this._instructionObservable.subscribe("slide_down", this._instructionObservers.slide_down);
+        this._instructionObservable.subscribe("single_touch", this._instructionObservers.single_touch);
 
-        vector.addEventListener("touchstart", event => {
-            this._touchState.touchstart.x = event.touches[0].clientX;
-            this._touchState.touchstart.y = event.touches[0].clientY;
-            this._touchState.touchmoved = false;
+        this._vector.addEventListener("touchstart", event => {
+            this._touchState.touch_start.x = event.touches[0].clientX;
+            this._touchState.touch_start.y = event.touches[0].clientY;
+            this._touchState.touch_moved = false;
         });
 
-        vector.addEventListener("touchmove", event => {
-            this._touchState.touchlastpos.x = event.touches[0].clientX;
-            this._touchState.touchlastpos.y = event.touches[0].clientY;
-            this._touchState.touchmoved = true;
+        this._vector.addEventListener("touchmove", event => {
+            this._touchState.touch_last_pos.x = event.touches[0].clientX;
+            this._touchState.touch_last_pos.y = event.touches[0].clientY;
+            this._touchState.touch_moved = true;
         })
 
-        vector.addEventListener("touchend", event => {
-            let diferenceX = this._touchState.touchstart.x! - this._touchState.touchlastpos.x!;
-            let diferenceY = this._touchState.touchstart.y! - this._touchState.touchlastpos.y!;
+        this._vector.addEventListener("touchend", () => {
+            let diferenceX = this._touchState.touch_start.x! - this._touchState.touch_last_pos.x!;
+            let diferenceY = this._touchState.touch_start.y! - this._touchState.touch_last_pos.y!;
 
-            if (diferenceX > 50 && this._touchState.touchmoved)
-                this._internalIntructionObservable.notifyAllSubscribers("slide_left", null);
-            
-            else if (diferenceX < -50 && this._touchState.touchmoved)
-                this._internalIntructionObservable.notifyAllSubscribers("slide_right", null);
-            
-            else if (diferenceY > 50 && this._touchState.touchmoved)
-                this._internalIntructionObservable.notifyAllSubscribers("slide_up", null);
+            if (diferenceX > 50 && this._touchState.touch_moved)
+                this._instructionObservable.notifyAllSubscribers("slide_left", this._touchState);
 
-            else if (diferenceY < -50 && this._touchState.touchmoved)
-                this._internalIntructionObservable.notifyAllSubscribers("slide_down", null);
-            
+            else if (diferenceX < -50 && this._touchState.touch_moved)
+                this._instructionObservable.notifyAllSubscribers("slide_right", this._touchState);
+
+            else if (diferenceY > 50 && this._touchState.touch_moved)
+                this._instructionObservable.notifyAllSubscribers("slide_up", this._touchState);
+
+            else if (diferenceY < -50 && this._touchState.touch_moved)
+                this._instructionObservable.notifyAllSubscribers("slide_down", this._touchState);
+
             else
-                this._internalIntructionObservable.notifyAllSubscribers("single_touch", null);
+                this._instructionObservable.notifyAllSubscribers("single_touch", null);
         });
     }
-    
-    on(eventType: string, callback: (data: ObserverDataIF) => {}) {
-        let observer = (this[(`_${eventType}InstructionObserver` as keyof Interface)] as unknown as InstructionObserver);
+
+    /**
+     * Adiciona um callback para determinado tipo de evento.
+     * @param eventType O tipo do evento.
+     * @param callback O callback.
+     */
+    on(eventType: InstructionEventType, callback: InstructionCallback) {
+        let observer = this._instructionObservers[eventType];
+
         observer.setCustomUpdate(callback);
+    }
+
+    /**
+     * Alias para o método on
+     */
+    addEventListener(eventType: InstructionEventType, callback: InstructionCallback) {
+        this.on(eventType, callback);
+    }
+
+    /**
+     * Remove o callback de determinado tipo de evento.
+     */
+    removeEventListener(eventType: InstructionEventType) {
+        let observer = this._instructionObservers[eventType];
+
+        observer.unsetCustomUpdate();
     }
 }
