@@ -183,7 +183,7 @@ class Interface {
     /**
      * Armazena os estados do toque e deslize sobre o elemento vector.
      */
-    private _touchState = {
+    private readonly _touchState = {
         touch_start: {
             x: 0,
             y: 0
@@ -198,12 +198,12 @@ class Interface {
     /**
      * O Observable que emite repassa as instruções recebidas pelo elemento vector.
      */
-    private _instructionObservable = new InstructionObservable();
+    private readonly _instructionObservable = new InstructionObservable();
 
     /**
      * Uma lista de observers separados por tipo evento.
      */
-    private _instructionObservers = {
+    private readonly _instructionObservers = {
         "slide_left": new InstructionObserver("slide_left"),
         "slide_right": new InstructionObserver("slide_right"),
         "slide_up": new InstructionObserver("slide_up"),
