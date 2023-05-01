@@ -32,7 +32,7 @@
 <ul class="tsd-hierarchy">
 <li><a href="InstructionObservable.html" class="tsd-signature-type tsd-kind-class">InstructionObservable</a></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L91">main.ts:91</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L82">main.ts:82</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -76,28 +76,23 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Observable.html" class="tsd-signature-type tsd-kind-class">Observable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">DataT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">ObserverT</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L105">main.ts:105</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L91">main.ts:91</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="acceptedEventTypes" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>accepted<wbr/>Event<wbr/>Types</span><a href="#acceptedEventTypes" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">accepted<wbr/>Event<wbr/>Types</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
-<div class="tsd-comment tsd-typography"><p>Uma lista de todos os eventos que o Observable emite.</p>
+<div class="tsd-comment tsd-typography"><p>Uma lista com todos os Observer&#39;s inscritos ao Observable separados por tipo de evento.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L95">main.ts:95</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L91">main.ts:91</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="subscribers" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>subscribers</span><a href="#subscribers" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">subscribers</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span><br/><span>    </span>[<span class="tsd-kind-index-signature">index</span>: <span class="tsd-signature-type">string</span>]<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type tsd-kind-type-parameter">ObserverT</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol"> = {}</span></div>
+<div class="tsd-signature"><span class="tsd-kind-property">subscribers</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">ObserverT</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = {}</span></div>
 <div class="tsd-comment tsd-typography"><p>Uma lista com todos os Observer&#39;s inscritos ao Observable separados por tipo de evento.</p>
-</div>
-<div class="tsd-type-declaration">
-<h4>Type declaration</h4>
-<ul class="tsd-parameters">
-<li class="tsd-parameter-index-signature">
-<h5><span class="tsd-signature-symbol">[</span><span class="tsd-kind-parameter">index</span>: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type tsd-kind-type-parameter">ObserverT</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5></li></ul></div><aside class="tsd-sources">
+</div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L100">main.ts:100</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L86">main.ts:86</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="notifyAllSubscribers" class="tsd-anchor"></a>
@@ -120,7 +115,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L164">main.ts:164</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L144">main.ts:144</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="subscribe" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>subscribe</span><a href="#subscribe" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -141,7 +136,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L118">main.ts:118</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L98">main.ts:98</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="unsubscribe" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>unsubscribe</span><a href="#unsubscribe" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -162,7 +157,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L135">main.ts:135</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L115">main.ts:115</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

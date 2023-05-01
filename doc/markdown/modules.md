@@ -33,7 +33,7 @@ Classe que representa um Observable de instruções.
 
 #### Defined in
 
-[main.ts:202](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L202)
+[main.ts:182](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L182)
 
 ___
 
@@ -45,7 +45,7 @@ Classe que representa um Observer de instruções.
 
 #### Defined in
 
-[main.ts:197](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L197)
+[main.ts:177](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L177)
 
 ___
 
@@ -57,7 +57,7 @@ Classe que representa o controlador de interface.
 
 #### Defined in
 
-[main.ts:211](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L211)
+[main.ts:191](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L191)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[main.ts:7](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L7)
+[main.ts:7](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L7)
 
 ___
 
@@ -86,7 +86,7 @@ Classe que representa um observable.
 
 #### Defined in
 
-[main.ts:91](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L91)
+[main.ts:82](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L82)
 
 ___
 
@@ -104,7 +104,7 @@ Classe que representa um Observer.
 
 #### Defined in
 
-[main.ts:30](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L30)
+[main.ts:30](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L30)
 
 ___
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[main.ts:1](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L1)
+[main.ts:1](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L1)
 
 ## Interfaces
 
@@ -126,7 +126,7 @@ Interface para dados de um Observer.
 
 #### Defined in
 
-[main.ts:16](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L16)
+[main.ts:16](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L16)
 
 ## Type Aliases
 
@@ -136,7 +136,7 @@ Interface para dados de um Observer.
 
 #### Type declaration
 
-▸ (`data`): Object
+▸ (`data`): void
 
 Tipo de callback de instrução.
 
@@ -148,11 +148,11 @@ Tipo de callback de instrução.
 
 ##### Returns
 
-Object
+void
 
 #### Defined in
 
-[main.ts:192](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L192)
+[main.ts:172](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L172)
 
 ___
 
@@ -164,4 +164,4 @@ Tipo de event de instrução.
 
 #### Defined in
 
-[main.ts:187](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/505b78e/main.ts#L187)
+[main.ts:167](https://github.com/moccot/aplicacao_computacao_e_socidedade/blob/1d99269/main.ts#L167)

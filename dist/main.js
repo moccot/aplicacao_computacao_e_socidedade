@@ -15,7 +15,7 @@ class NoSubscribersError extends Error {
 class Observer {
     /**
      * @param acceptedEventType - O tipo de evento aceito pelo Observer.
-     * @param customUpdate - Callback com a lógica de processamento de dados recebidos por meio do evento aceito pelo Observer.
+     * @param customUpdate - Callback com a lógica de processamento de dados recebidos por meio do evento aceito pelo Observer. O argumento data é o dado recebido.
      */
     constructor(acceptedEventType, customUpdate) {
         this.acceptedEventType = acceptedEventType;
@@ -63,14 +63,11 @@ class Observable {
      * @param acceptedEventTypes Uma lista com todos os Observer's inscritos ao Observable separados por tipo de evento.
      */
     constructor(acceptedEventTypes) {
+        this.acceptedEventTypes = acceptedEventTypes;
         /**
          * Uma lista com todos os Observer's inscritos ao Observable separados por tipo de evento.
          */
         this.subscribers = {};
-        this.acceptedEventTypes = acceptedEventTypes;
-        for (let acceptedEventType of this.acceptedEventTypes) {
-            this.subscribers[acceptedEventType] = [];
-        }
     }
     /**
      * Inscreve um observer.

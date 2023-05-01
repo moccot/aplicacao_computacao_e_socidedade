@@ -29,29 +29,15 @@ interface ObserverDataIF {
  */
 class Observer<DataT extends ObserverDataIF> {
     /**
-     * O tipo de evento pelo Observer.
-     */
-    private readonly acceptedEventType: string;
-
-    /**
-     * Callback com a lógica de processamento de dados passados pelo Observable em qual o Observer está inscrito.
-     * @param data - O dado recebido por meio do evento aceito pelo Observer.
-     */
-    private customUpdate?: (data: DataT) => {} | null;
-
-    /**
      * @param acceptedEventType - O tipo de evento aceito pelo Observer.
-     * @param customUpdate - Callback com a lógica de processamento de dados recebidos por meio do evento aceito pelo Observer.
+     * @param customUpdate - Callback com a lógica de processamento de dados recebidos por meio do evento aceito pelo Observer. O argumento data é o dado recebido.
      */
-    constructor(acceptedEventType: string, customUpdate?: (data: DataT) => {} | null) {
-        this.acceptedEventType = acceptedEventType;
-        this.customUpdate = customUpdate;
-    }
+    constructor(private readonly acceptedEventType: string, private customUpdate?: (data: DataT) => void | null) { }
 
     /**
      * Define a propriedade customUpdate.
      */
-    setCustomUpdate(customUpdate: (data: DataT) => {}) {
+    setCustomUpdate(customUpdate: (data: DataT) => void) {
         this.customUpdate = customUpdate;
     }
 
@@ -90,25 +76,14 @@ class Observer<DataT extends ObserverDataIF> {
  */
 class Observable<DataT extends ObserverDataIF, ObserverT extends Observer<DataT>> {
     /**
-     * Uma lista de todos os eventos que o Observable emite.
-     */
-    private readonly acceptedEventTypes: string[];
-
-    /**
      * Uma lista com todos os Observer's inscritos ao Observable separados por tipo de evento.
      */
-    private readonly subscribers: { [index: string]: ObserverT[] | undefined } = {};
+    private readonly subscribers: Record<string, ObserverT[]> = {};
 
     /**
      * @param acceptedEventTypes Uma lista com todos os Observer's inscritos ao Observable separados por tipo de evento.
      */
-    constructor(acceptedEventTypes: string[]) {
-        this.acceptedEventTypes = acceptedEventTypes;
-
-        for (let acceptedEventType of this.acceptedEventTypes) {
-            this.subscribers[acceptedEventType] = [];
-        }
-    }
+    constructor(private readonly acceptedEventTypes: string[]) { }
 
     /**
      * Inscreve um observer.
@@ -189,7 +164,7 @@ type InstructionEventType = "slide_left" | "slide_right" | "slide_up" | "slide_d
 /**
  * Tipo de callback de instrução.
  */
-type InstructionCallback = (data: ObserverDataIF) => {};
+type InstructionCallback = (data: ObserverDataIF) => void;
 
 /**
  * Classe que representa um Observer de instruções.
@@ -250,7 +225,7 @@ class Interface {
      */
     constructor(vector: HTMLElement) {
         this._vector = vector;
-        
+
         /**
          * Inscreve todos os Observer's de Instrução criados no Observable de Instrução.
          */
